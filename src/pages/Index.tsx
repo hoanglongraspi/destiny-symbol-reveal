@@ -85,56 +85,93 @@ const FortuneCard = ({
   
   return (
     <div 
-      className="relative w-24 h-36 cursor-pointer transition-transform duration-300 hover:scale-105"
+      className="relative w-28 h-40 cursor-pointer transition-all duration-300 hover:scale-105 hover:rotate-1"
       onClick={onReveal}
     >
-      {/* Card Back */}
-      <div className={`absolute inset-0 bg-gray-100 rounded-lg border-2 border-gray-300 shadow-lg transition-all duration-500 ${
+      {/* Card Back with Chinese patterns */}
+      <div className={`absolute inset-0 bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl border-3 border-amber-300 shadow-xl transition-all duration-700 ${
         isRevealed ? 'opacity-0 rotate-y-180' : 'opacity-100'
       }`}>
-        <div className="flex items-center justify-center h-full">
-          <div className="text-gray-800 text-2xl">
-            {index === 0 && <Triangle size={28} />}
-            {index === 1 && <Circle size={28} />}
-            {index === 2 && <Star size={28} />}
-            {index === 3 && <X size={28} />}
-            {index === 4 && <Circle size={28} />}
+        <div className="flex items-center justify-center h-full relative overflow-hidden">
+          {/* Traditional Chinese cloud pattern background */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="w-full h-full bg-gradient-to-br from-amber-200 to-amber-300"></div>
+            <div className="absolute top-2 left-2 w-6 h-6 border-2 border-amber-400 rounded-full opacity-30"></div>
+            <div className="absolute bottom-2 right-2 w-4 h-4 border-2 border-amber-400 rounded-full opacity-30"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 border border-amber-400 rounded-full opacity-20"></div>
+          </div>
+          
+          {/* Corner decorations */}
+          <div className="absolute top-1 left-1 w-3 h-3 border-l-2 border-t-2 border-amber-400"></div>
+          <div className="absolute top-1 right-1 w-3 h-3 border-r-2 border-t-2 border-amber-400"></div>
+          <div className="absolute bottom-1 left-1 w-3 h-3 border-l-2 border-b-2 border-amber-400"></div>
+          <div className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-amber-400"></div>
+          
+          {/* Main icon with glow effect */}
+          <div className="relative z-10 p-2 bg-amber-200/50 rounded-full">
+            <div className="text-amber-700 text-3xl drop-shadow-lg">
+              {index === 0 && <Triangle size={32} />}
+              {index === 1 && <Circle size={32} />}
+              {index === 2 && <Star size={32} />}
+              {index === 3 && <X size={32} />}
+              {index === 4 && <Circle size={32} />}
+            </div>
           </div>
         </div>
       </div>
       
-      {/* Card Front with Chinese details */}
-      <div className={`absolute inset-0 bg-gradient-to-b from-red-600 to-red-800 rounded-lg border-2 border-yellow-400 shadow-lg transition-all duration-500 ${
+      {/* Card Front with enhanced Chinese styling */}
+      <div className={`absolute inset-0 bg-gradient-to-br from-red-700 via-red-600 to-red-800 rounded-xl border-3 border-yellow-400 shadow-xl transition-all duration-700 ${
         isRevealed ? 'opacity-100 rotate-y-0' : 'opacity-0 rotate-y-180'
       }`}>
-        <div className="flex flex-col items-center justify-center h-full p-2 relative">
-          {/* Traditional Chinese border pattern */}
-          <div className="absolute top-1 left-1 right-1 bottom-1 border border-yellow-300 rounded opacity-50"></div>
-          
-          {/* Element symbol in corner */}
-          <div className="absolute top-2 right-2 text-yellow-300 text-xs font-bold">
-            {symbol.chineseElement}
+        <div className="flex flex-col items-center justify-center h-full p-3 relative overflow-hidden">
+          {/* Traditional Chinese decorative background */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-300 to-transparent"></div>
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-300 to-transparent"></div>
+            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-yellow-300 to-transparent"></div>
+            <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-yellow-300 to-transparent"></div>
           </div>
           
-          {/* Main symbol */}
-          <IconComponent size={24} className="text-yellow-300 mb-2" />
+          {/* Inner decorative frame */}
+          <div className="absolute top-2 left-2 right-2 bottom-2 border border-yellow-300/50 rounded-lg"></div>
           
-          {/* Chinese and English name */}
-          <div className="text-yellow-300 text-sm font-bold text-center mb-1">
-            {symbol.name[language]}
+          {/* Traditional corner ornaments */}
+          <div className="absolute top-2 left-2 text-yellow-300 text-xs">◆</div>
+          <div className="absolute top-2 right-2 text-yellow-300 text-xs">◆</div>
+          <div className="absolute bottom-2 left-2 text-yellow-300 text-xs">◆</div>
+          <div className="absolute bottom-2 right-2 text-yellow-300 text-xs">◆</div>
+          
+          {/* Element symbol with background */}
+          <div className="absolute top-3 right-3 bg-yellow-300/20 rounded-full w-6 h-6 flex items-center justify-center">
+            <span className="text-yellow-300 text-sm font-bold">{symbol.chineseElement}</span>
           </div>
           
-          {/* Lucky number */}
-          <div className="text-yellow-300 text-xl font-bold mb-1">
-            {symbol.number}
+          {/* Main symbol with enhanced styling */}
+          <div className="relative z-10 mb-2 p-2 bg-yellow-300/10 rounded-full">
+            <IconComponent size={28} className="text-yellow-300 drop-shadow-lg" />
           </div>
           
-          {/* Direction indicator */}
-          <div className="text-yellow-200 text-xs opacity-75">
-            {language === 'en' ? symbol.direction : 
-             symbol.direction === 'North' ? '北' :
-             symbol.direction === 'South' ? '南' :
-             symbol.direction === 'East' ? '东' : '西'}
+          {/* Chinese and English name with background */}
+          <div className="relative z-10 bg-yellow-300/10 rounded-md px-2 py-1 mb-2">
+            <div className="text-yellow-300 text-sm font-bold text-center tracking-wide">
+              {symbol.name[language]}
+            </div>
+          </div>
+          
+          {/* Lucky number with traditional styling */}
+          <div className="relative z-10 bg-yellow-300/20 rounded-full w-8 h-8 flex items-center justify-center mb-2">
+            <span className="text-yellow-300 text-xl font-bold">{symbol.number}</span>
+          </div>
+          
+          {/* Direction indicator with Chinese styling */}
+          <div className="relative z-10 bg-yellow-200/10 rounded px-2 py-0.5">
+            <span className="text-yellow-200 text-xs opacity-90">
+              {language === 'en' ? symbol.direction : 
+               symbol.direction === 'North' ? '北' :
+               symbol.direction === 'South' ? '南' :
+               symbol.direction === 'East' ? '东' : '西'}
+            </span>
           </div>
         </div>
       </div>
@@ -275,106 +312,161 @@ const Index = () => {
   const results = calculateResults();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-900 to-red-800 flex flex-col items-center justify-center p-8 relative">
-      {/* Header with Chinese styling */}
-      <div className="text-center mb-12">
-        <h1 className="text-5xl font-bold text-yellow-300 mb-3 tracking-wide">{text[language].title}</h1>
-        <p className="text-yellow-200 text-xl">{text[language].subtitle}</p>
-        <div className="w-32 h-0.5 bg-yellow-400 mx-auto mt-4"></div>
+    <div className="min-h-screen bg-gradient-to-br from-red-950 via-red-900 to-red-800 flex flex-col items-center justify-center p-8 relative overflow-hidden">
+      {/* Enhanced background decorative elements */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-10 left-10 w-32 h-32 border border-yellow-400/30 rounded-full"></div>
+        <div className="absolute top-20 right-20 w-24 h-24 border border-yellow-400/20 rounded-full"></div>
+        <div className="absolute bottom-20 left-20 w-28 h-28 border border-yellow-400/25 rounded-full"></div>
+        <div className="absolute bottom-10 right-10 w-20 h-20 border border-yellow-400/30 rounded-full"></div>
+        
+        {/* Traditional Chinese pattern lines */}
+        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-yellow-400/20 to-transparent"></div>
+        <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-yellow-400/20 to-transparent"></div>
+        <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-400/20 to-transparent"></div>
+        <div className="absolute bottom-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-400/20 to-transparent"></div>
+      </div>
+
+      {/* Header with enhanced Chinese styling */}
+      <div className="text-center mb-12 relative z-10">
+        <div className="relative inline-block">
+          {/* Decorative elements around title */}
+          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-yellow-400 text-2xl">◆</div>
+          <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-yellow-400 text-2xl">◆</div>
+          
+          <h1 className="text-6xl font-bold text-yellow-300 mb-4 tracking-wider drop-shadow-2xl relative">
+            {text[language].title}
+            {/* Traditional Chinese decorative elements */}
+            <div className="absolute -left-8 top-1/2 transform -translate-y-1/2 text-yellow-400 text-3xl opacity-60">龍</div>
+            <div className="absolute -right-8 top-1/2 transform -translate-y-1/2 text-yellow-400 text-3xl opacity-60">鳳</div>
+          </h1>
+        </div>
+        
+        <p className="text-yellow-200 text-xl mb-4 font-medium">{text[language].subtitle}</p>
+        
+        {/* Enhanced decorative line with pattern */}
+        <div className="flex items-center justify-center gap-2">
+          <div className="text-yellow-400 text-sm">◆</div>
+          <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent"></div>
+          <div className="text-yellow-400 text-lg">※</div>
+          <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent"></div>
+          <div className="text-yellow-400 text-sm">◆</div>
+        </div>
       </div>
 
       {/* Main content area - centered */}
-      <div className="flex flex-col items-center">
-        {/* Card Area */}
-        <div className="flex gap-6 mb-8">
-          {[0, 1, 2, 3, 4].map((index) => (
-            <FortuneCard
-              key={index}
-              index={index}
-              isRevealed={revealedCards[index]}
-              onReveal={() => revealCard(index)}
-              symbol={drawnSymbols[index] || symbols[index]}
-              language={language}
-            />
-          ))}
+      <div className="flex flex-col items-center relative z-10">
+        {/* Card Area with enhanced background */}
+        <div className="relative">
+          {/* Mystical background glow */}
+          <div className="absolute inset-0 bg-yellow-400/5 rounded-3xl blur-xl transform scale-110"></div>
+          
+          <div className="flex gap-8 mb-8 relative z-10 p-6 bg-black/10 rounded-2xl backdrop-blur-sm border border-yellow-400/20">
+            {[0, 1, 2, 3, 4].map((index) => (
+              <FortuneCard
+                key={index}
+                index={index}
+                isRevealed={revealedCards[index]}
+                onReveal={() => revealCard(index)}
+                symbol={drawnSymbols[index] || symbols[index]}
+                language={language}
+              />
+            ))}
+          </div>
         </div>
 
-        {/* Instructions */}
+        {/* Instructions with enhanced styling */}
         {gameStarted && !allCardsRevealed && (
-          <div className="text-yellow-200 text-center text-lg">
+          <div className="text-yellow-200 text-center text-lg font-medium bg-black/20 px-6 py-3 rounded-xl border border-yellow-400/30 backdrop-blur-sm">
             {text[language].instructions}
           </div>
         )}
 
-        {/* Results Display */}
+        {/* Enhanced Results Display */}
         {showResults && results && (
-          <div className="bg-gradient-to-b from-yellow-100 to-yellow-50 rounded-lg p-8 shadow-2xl border-4 border-yellow-400 max-w-2xl">
-            <div className="text-center mb-6">
-              <h2 className="text-3xl font-bold text-red-800 mb-2">{text[language].results}</h2>
-              <div className="w-24 h-0.5 bg-red-600 mx-auto"></div>
+          <div className="bg-gradient-to-br from-yellow-50 via-amber-50 to-yellow-100 rounded-2xl p-8 shadow-2xl border-4 border-yellow-400 max-w-2xl relative overflow-hidden">
+            {/* Decorative background pattern */}
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute top-4 left-4 text-6xl text-red-600">龍</div>
+              <div className="absolute top-4 right-4 text-6xl text-red-600">鳳</div>
+              <div className="absolute bottom-4 left-4 text-4xl text-red-600">福</div>
+              <div className="absolute bottom-4 right-4 text-4xl text-red-600">壽</div>
             </div>
-
-            <div className="grid grid-cols-2 gap-6 mb-6">
-              <div className="text-center p-4 bg-red-100 rounded-lg">
-                <h3 className="text-lg font-semibold text-red-800 mb-2">{text[language].totalScore}</h3>
-                <div className="text-4xl font-bold text-red-600">{results.totalScore}</div>
-              </div>
-              <div className="text-center p-4 bg-red-100 rounded-lg">
-                <h3 className="text-lg font-semibold text-red-800 mb-2">{text[language].dominantElement}</h3>
-                <div className="text-4xl font-bold text-red-600">{results.dominantElement}</div>
-              </div>
-            </div>
-
-            <div className="text-center mb-6">
-              <h3 className="text-xl font-semibold text-red-800 mb-3">{text[language].fortuneSummary}</h3>
-              <p className="text-red-700 leading-relaxed">{text[language].yourPath}</p>
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-4 mb-6">
-              {drawnSymbols.map((symbol, index) => (
-                <div key={index} className="flex items-center gap-2 bg-white rounded-lg p-3 shadow">
-                  <symbol.icon size={20} className="text-red-600" />
-                  <span className="font-medium text-red-800">{symbol.name[language]}</span>
-                  <span className="text-red-600 font-bold">({symbol.number})</span>
+            
+            <div className="relative z-10">
+              <div className="text-center mb-6">
+                <h2 className="text-3xl font-bold text-red-800 mb-2">{text[language].results}</h2>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="text-red-600 text-sm">◆</div>
+                  <div className="w-24 h-0.5 bg-red-600"></div>
+                  <div className="text-red-600 text-lg">※</div>
+                  <div className="w-24 h-0.5 bg-red-600"></div>
+                  <div className="text-red-600 text-sm">◆</div>
                 </div>
-              ))}
-            </div>
+              </div>
 
-            <div className="text-center">
-              <Button 
-                onClick={() => setShowResults(false)}
-                className="bg-red-600 text-white hover:bg-red-700 px-8 py-3 rounded-md font-medium"
-              >
-                {text[language].closeResults}
-              </Button>
+              <div className="grid grid-cols-2 gap-6 mb-6">
+                <div className="text-center p-6 bg-gradient-to-br from-red-100 to-red-50 rounded-xl border border-red-200 shadow-md">
+                  <h3 className="text-lg font-semibold text-red-800 mb-2">{text[language].totalScore}</h3>
+                  <div className="text-5xl font-bold text-red-600 drop-shadow-lg">{results.totalScore}</div>
+                </div>
+                <div className="text-center p-6 bg-gradient-to-br from-red-100 to-red-50 rounded-xl border border-red-200 shadow-md">
+                  <h3 className="text-lg font-semibold text-red-800 mb-2">{text[language].dominantElement}</h3>
+                  <div className="text-5xl font-bold text-red-600 drop-shadow-lg">{results.dominantElement}</div>
+                </div>
+              </div>
+
+              <div className="text-center mb-6 bg-gradient-to-r from-red-50 to-amber-50 p-6 rounded-xl border border-red-200">
+                <h3 className="text-xl font-semibold text-red-800 mb-3">{text[language].fortuneSummary}</h3>
+                <p className="text-red-700 leading-relaxed font-medium">{text[language].yourPath}</p>
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-4 mb-6">
+                {drawnSymbols.map((symbol, index) => (
+                  <div key={index} className="flex items-center gap-2 bg-white rounded-xl p-4 shadow-lg border border-red-100 hover:shadow-xl transition-shadow">
+                    <symbol.icon size={20} className="text-red-600" />
+                    <span className="font-medium text-red-800">{symbol.name[language]}</span>
+                    <span className="text-red-600 font-bold">({symbol.number})</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="text-center">
+                <Button 
+                  onClick={() => setShowResults(false)}
+                  className="bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 px-8 py-3 rounded-xl font-medium shadow-lg transform hover:scale-105 transition-all"
+                >
+                  {text[language].closeResults}
+                </Button>
+              </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Control Buttons - Bottom Right */}
-      <div className="fixed bottom-6 right-6 flex flex-col gap-3">
+      {/* Enhanced Control Buttons - Bottom Right */}
+      <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-20">
         <Button 
           onClick={startGame}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 rounded-md font-medium"
+          className="bg-gradient-to-r from-amber-200 to-yellow-200 text-gray-800 hover:from-amber-300 hover:to-yellow-300 px-6 py-3 rounded-xl font-medium shadow-lg border border-yellow-400/50 backdrop-blur-sm transform hover:scale-105 transition-all"
         >
           {gameStarted ? text[language].newGame : text[language].start}
         </Button>
         <Button 
           onClick={showSettings}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 rounded-md font-medium"
+          className="bg-gradient-to-r from-amber-200 to-yellow-200 text-gray-800 hover:from-amber-300 hover:to-yellow-300 px-6 py-3 rounded-xl font-medium shadow-lg border border-yellow-400/50 backdrop-blur-sm transform hover:scale-105 transition-all"
         >
           {text[language].setting}
         </Button>
         <Button 
           onClick={() => setLanguage(prev => prev === 'en' ? 'zh' : 'en')}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 rounded-md font-medium"
+          className="bg-gradient-to-r from-amber-200 to-yellow-200 text-gray-800 hover:from-amber-300 hover:to-yellow-300 px-6 py-3 rounded-xl font-medium shadow-lg border border-yellow-400/50 backdrop-blur-sm transform hover:scale-105 transition-all"
         >
           {text[language].language}
         </Button>
         <Button 
           onClick={showCredits}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 rounded-md font-medium"
+          className="bg-gradient-to-r from-amber-200 to-yellow-200 text-gray-800 hover:from-amber-300 hover:to-yellow-300 px-6 py-3 rounded-xl font-medium shadow-lg border border-yellow-400/50 backdrop-blur-sm transform hover:scale-105 transition-all"
         >
           {text[language].credit}
         </Button>
