@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Triangle, Circle, Star, X } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
-// Cultural symbols and their meanings
+// Enhanced cultural symbols with more Chinese details
 const symbols = [
   {
     id: 1,
@@ -13,49 +13,59 @@ const symbols = [
     name: { en: "Mountain", zh: "山" },
     number: 8,
     meaning: {
-      en: "Strength and stability await you. Like the eternal mountain, your foundation is solid.",
-      zh: "力量与稳定等待着你。如永恒的山峰，你的根基坚实。"
-    }
+      en: "The sacred peaks bring stability and eternal strength. Like Mount Tai, your foundation will endure through all seasons.",
+      zh: "神圣的山峰带来稳定和永恒的力量。如泰山般，你的根基将历经四季而不摇。"
+    },
+    chineseElement: "土",
+    direction: "North"
   },
   {
     id: 2,
     icon: Circle,
-    name: { en: "Unity", zh: "圆" },
+    name: { en: "Unity", zh: "圆满" },
     number: 9,
     meaning: {
-      en: "Harmony and completeness surround you. The circle brings endless possibilities.",
-      zh: "和谐与完整围绕着你。圆满带来无限可能。"
-    }
+      en: "The perfect circle represents harmony in the Middle Kingdom. Heaven and Earth unite in your favor.",
+      zh: "完美的圆代表中华和谐。天地合一，助你成功。"
+    },
+    chineseElement: "金",
+    direction: "West"
   },
   {
     id: 3,
     icon: Star,
-    name: { en: "Guidance", zh: "星" },
+    name: { en: "Guidance", zh: "北斗" },
     number: 7,
     meaning: {
-      en: "Your path is illuminated by wisdom. Follow the star to your destiny.",
-      zh: "智慧照亮你的道路。跟随星光走向命运。"
-    }
+      en: "The North Star guides travelers home. Ancient wisdom illuminates your destined path.",
+      zh: "北斗星指引游子归家。古老智慧照亮你的命运之路。"
+    },
+    chineseElement: "水",
+    direction: "North"
   },
   {
     id: 4,
     icon: X,
-    name: { en: "Crossroads", zh: "十" },
+    name: { en: "Crossroads", zh: "十字" },
     number: 4,
     meaning: {
-      en: "Important decisions await. Choose with your heart and mind united.",
-      zh: "重要的决定在等待。用心灵与理智的结合来选择。"
-    }
+      en: "At the crossroads of destiny, choose with the wisdom of Confucius. Balance is the way.",
+      zh: "在命运的十字路口，以孔子的智慧选择。平衡即是道。"
+    },
+    chineseElement: "木",
+    direction: "East"
   },
   {
     id: 5,
     icon: Circle,
-    name: { en: "Fortune", zh: "福" },
+    name: { en: "Fortune", zh: "福运" },
     number: 6,
     meaning: {
-      en: "Good fortune flows toward you like a gentle river. Embrace the blessings.",
-      zh: "好运如温柔的河流向你涌来。拥抱祝福。"
-    }
+      en: "The dragon brings prosperity from the eastern seas. Your fortune flows like the Yellow River.",
+      zh: "龙从东海带来繁荣。你的福运如黄河般奔流。"
+    },
+    chineseElement: "火",
+    direction: "South"
   }
 ];
 
@@ -76,33 +86,56 @@ const FortuneCard = ({
   
   return (
     <div 
-      className="relative w-20 h-32 cursor-pointer transition-transform duration-300 hover:scale-105"
+      className="relative w-24 h-36 cursor-pointer transition-transform duration-300 hover:scale-105"
       onClick={onReveal}
     >
-      <div className={`absolute inset-0 bg-gray-600 rounded-lg border border-gray-500 transition-all duration-500 ${
+      {/* Card Back */}
+      <div className={`absolute inset-0 bg-gray-100 rounded-lg border-2 border-gray-300 shadow-lg transition-all duration-500 ${
         isRevealed ? 'opacity-0 rotate-y-180' : 'opacity-100'
       }`}>
         <div className="flex items-center justify-center h-full">
-          <div className="text-gray-800 text-xl font-bold">
-            {index === 0 && <Triangle size={24} />}
-            {index === 1 && <Circle size={24} />}
-            {index === 2 && <Star size={24} />}
-            {index === 3 && <X size={24} />}
-            {index === 4 && <Circle size={24} />}
+          <div className="text-gray-800 text-2xl">
+            {index === 0 && <Triangle size={28} />}
+            {index === 1 && <Circle size={28} />}
+            {index === 2 && <Star size={28} />}
+            {index === 3 && <X size={28} />}
+            {index === 4 && <Circle size={28} />}
           </div>
         </div>
       </div>
       
-      <div className={`absolute inset-0 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-lg border border-yellow-500 transition-all duration-500 ${
+      {/* Card Front with Chinese details */}
+      <div className={`absolute inset-0 bg-gradient-to-b from-red-600 to-red-800 rounded-lg border-2 border-yellow-400 shadow-lg transition-all duration-500 ${
         isRevealed ? 'opacity-100 rotate-y-0' : 'opacity-0 rotate-y-180'
       }`}>
-        <div className="flex flex-col items-center justify-center h-full p-2">
-          <IconComponent size={20} className="text-red-800 mb-1" />
-          <div className="text-red-800 text-xs font-bold text-center">
+        <div className="flex flex-col items-center justify-center h-full p-2 relative">
+          {/* Traditional Chinese border pattern */}
+          <div className="absolute top-1 left-1 right-1 bottom-1 border border-yellow-300 rounded opacity-50"></div>
+          
+          {/* Element symbol in corner */}
+          <div className="absolute top-2 right-2 text-yellow-300 text-xs font-bold">
+            {symbol.chineseElement}
+          </div>
+          
+          {/* Main symbol */}
+          <IconComponent size={24} className="text-yellow-300 mb-2" />
+          
+          {/* Chinese and English name */}
+          <div className="text-yellow-300 text-sm font-bold text-center mb-1">
             {symbol.name[language]}
           </div>
-          <div className="text-red-800 text-lg font-bold mt-1">
+          
+          {/* Lucky number */}
+          <div className="text-yellow-300 text-xl font-bold mb-1">
             {symbol.number}
+          </div>
+          
+          {/* Direction indicator */}
+          <div className="text-yellow-200 text-xs opacity-75">
+            {language === 'en' ? symbol.direction : 
+             symbol.direction === 'North' ? '北' :
+             symbol.direction === 'South' ? '南' :
+             symbol.direction === 'East' ? '东' : '西'}
           </div>
         </div>
       </div>
@@ -118,7 +151,7 @@ const Index = () => {
 
   const text = {
     en: {
-      title: "Cultural Fortune Cards",
+      title: "Chinese Fortune Cards",
       subtitle: "Discover ancient wisdom through traditional symbols",
       start: "Start",
       setting: "Setting", 
@@ -128,7 +161,7 @@ const Index = () => {
       newGame: "New Game"
     },
     zh: {
-      title: "文化占卜卡",
+      title: "中华占卜卡",
       subtitle: "通过传统符号发现古老智慧",
       start: "开始",
       setting: "设置",
@@ -156,12 +189,12 @@ const Index = () => {
       return newSymbols;
     });
 
-    // Show fortune message
+    // Show detailed fortune message
     setTimeout(() => {
       toast({
-        title: `${randomSymbol.name[language]} (${randomSymbol.number})`,
+        title: `${randomSymbol.name[language]} (${randomSymbol.number}) - ${randomSymbol.chineseElement}`,
         description: randomSymbol.meaning[language],
-        duration: 5000,
+        duration: 6000,
       });
     }, 600);
   };
@@ -179,11 +212,11 @@ const Index = () => {
 
   const showCredits = () => {
     toast({
-      title: language === 'en' ? "Cultural Fortune Cards" : "文化占卜卡",
+      title: language === 'en' ? "Chinese Fortune Cards" : "中华占卜卡",
       description: language === 'en' 
-        ? "An educational app exploring Chinese cultural traditions through interactive fortune-telling."
-        : "通过互动占卜探索中国文化传统的教育应用程序。",
-      duration: 4000,
+        ? "An educational app exploring Chinese cultural traditions through interactive fortune-telling with five elements and directions."
+        : "通过互动占卜探索中国文化传统的教育应用程序，融合五行和方位学说。",
+      duration: 5000,
     });
   };
 
@@ -191,22 +224,23 @@ const Index = () => {
     toast({
       title: language === 'en' ? "Settings" : "设置",
       description: language === 'en' 
-        ? "Use the Language button to switch between English and Chinese."
-        : "使用语言按钮在英文和中文之间切换。",
-      duration: 3000,
+        ? "Use the Language button to switch between English and Chinese. Each card represents traditional Chinese elements and directions."
+        : "使用语言按钮在英文和中文之间切换。每张卡片代表传统的中国元素和方向。",
+      duration: 4000,
     });
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-900 to-red-800 flex flex-col items-center justify-center p-8">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-yellow-300 mb-2">{text[language].title}</h1>
-        <p className="text-yellow-200 text-lg">{text[language].subtitle}</p>
+      {/* Header with Chinese styling */}
+      <div className="text-center mb-12">
+        <h1 className="text-5xl font-bold text-yellow-300 mb-3 tracking-wide">{text[language].title}</h1>
+        <p className="text-yellow-200 text-xl">{text[language].subtitle}</p>
+        <div className="w-32 h-0.5 bg-yellow-400 mx-auto mt-4"></div>
       </div>
 
       {/* Card Area */}
-      <div className="flex gap-4 mb-8">
+      <div className="flex gap-6 mb-12">
         {[0, 1, 2, 3, 4].map((index) => (
           <FortuneCard
             key={index}
@@ -221,40 +255,32 @@ const Index = () => {
 
       {/* Instructions */}
       {gameStarted && (
-        <div className="text-yellow-200 text-center mb-6">
+        <div className="text-yellow-200 text-center mb-8 text-lg">
           {text[language].instructions}
         </div>
       )}
 
-      {/* Control Buttons */}
-      <div className="flex gap-4 mb-6">
+      {/* Control Buttons - Right aligned like reference */}
+      <div className="flex flex-col gap-3 items-end">
         <Button 
           onClick={startGame}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 rounded-lg font-medium"
+          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-8 py-3 rounded-md font-medium w-32"
         >
           {gameStarted ? text[language].newGame : text[language].start}
         </Button>
         <Button 
           onClick={showSettings}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 rounded-lg font-medium"
+          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-8 py-3 rounded-md font-medium w-32"
         >
           {text[language].setting}
         </Button>
         <Button 
-          onClick={showCredits}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 rounded-lg font-medium"
+          onClick={() => setLanguage(prev => prev === 'en' ? 'zh' : 'en')}
+          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-8 py-3 rounded-md font-medium w-32"
         >
-          {text[language].credit}
+          {text[language].language}
         </Button>
       </div>
-
-      {/* Language Toggle */}
-      <Button 
-        onClick={() => setLanguage(prev => prev === 'en' ? 'zh' : 'en')}
-        className="bg-yellow-600 text-red-900 hover:bg-yellow-500 px-6 py-2 rounded-lg font-medium"
-      >
-        {text[language].language}: {language === 'en' ? 'English' : '中文'}
-      </Button>
     </div>
   );
 };
