@@ -275,7 +275,7 @@ const Index = () => {
   const results = calculateResults();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-900 to-red-800 flex flex-col items-center justify-center p-8">
+    <div className="min-h-screen bg-gradient-to-b from-red-900 to-red-800 flex flex-col items-center justify-center p-8 relative">
       {/* Header with Chinese styling */}
       <div className="text-center mb-12">
         <h1 className="text-5xl font-bold text-yellow-300 mb-3 tracking-wide">{text[language].title}</h1>
@@ -283,97 +283,101 @@ const Index = () => {
         <div className="w-32 h-0.5 bg-yellow-400 mx-auto mt-4"></div>
       </div>
 
-      {/* Main content area */}
-      <div className="flex gap-12 items-start">
-        {/* Control Buttons - Left aligned */}
-        <div className="flex flex-col gap-3 items-start">
-          <Button 
-            onClick={startGame}
-            className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-8 py-3 rounded-md font-medium w-32"
-          >
-            {gameStarted ? text[language].newGame : text[language].start}
-          </Button>
-          <Button 
-            onClick={showSettings}
-            className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-8 py-3 rounded-md font-medium w-32"
-          >
-            {text[language].setting}
-          </Button>
-          <Button 
-            onClick={() => setLanguage(prev => prev === 'en' ? 'zh' : 'en')}
-            className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-8 py-3 rounded-md font-medium w-32"
-          >
-            {text[language].language}
-          </Button>
-        </div>
-
+      {/* Main content area - centered */}
+      <div className="flex flex-col items-center">
         {/* Card Area */}
-        <div className="flex flex-col items-center">
-          <div className="flex gap-6 mb-8">
-            {[0, 1, 2, 3, 4].map((index) => (
-              <FortuneCard
-                key={index}
-                index={index}
-                isRevealed={revealedCards[index]}
-                onReveal={() => revealCard(index)}
-                symbol={drawnSymbols[index] || symbols[index]}
-                language={language}
-              />
-            ))}
-          </div>
-
-          {/* Instructions */}
-          {gameStarted && !allCardsRevealed && (
-            <div className="text-yellow-200 text-center text-lg">
-              {text[language].instructions}
-            </div>
-          )}
-
-          {/* Results Display */}
-          {showResults && results && (
-            <div className="bg-gradient-to-b from-yellow-100 to-yellow-50 rounded-lg p-8 shadow-2xl border-4 border-yellow-400 max-w-2xl">
-              <div className="text-center mb-6">
-                <h2 className="text-3xl font-bold text-red-800 mb-2">{text[language].results}</h2>
-                <div className="w-24 h-0.5 bg-red-600 mx-auto"></div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-6 mb-6">
-                <div className="text-center p-4 bg-red-100 rounded-lg">
-                  <h3 className="text-lg font-semibold text-red-800 mb-2">{text[language].totalScore}</h3>
-                  <div className="text-4xl font-bold text-red-600">{results.totalScore}</div>
-                </div>
-                <div className="text-center p-4 bg-red-100 rounded-lg">
-                  <h3 className="text-lg font-semibold text-red-800 mb-2">{text[language].dominantElement}</h3>
-                  <div className="text-4xl font-bold text-red-600">{results.dominantElement}</div>
-                </div>
-              </div>
-
-              <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold text-red-800 mb-3">{text[language].fortuneSummary}</h3>
-                <p className="text-red-700 leading-relaxed">{text[language].yourPath}</p>
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-4 mb-6">
-                {drawnSymbols.map((symbol, index) => (
-                  <div key={index} className="flex items-center gap-2 bg-white rounded-lg p-3 shadow">
-                    <symbol.icon size={20} className="text-red-600" />
-                    <span className="font-medium text-red-800">{symbol.name[language]}</span>
-                    <span className="text-red-600 font-bold">({symbol.number})</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="text-center">
-                <Button 
-                  onClick={() => setShowResults(false)}
-                  className="bg-red-600 text-white hover:bg-red-700 px-8 py-3 rounded-md font-medium"
-                >
-                  {text[language].closeResults}
-                </Button>
-              </div>
-            </div>
-          )}
+        <div className="flex gap-6 mb-8">
+          {[0, 1, 2, 3, 4].map((index) => (
+            <FortuneCard
+              key={index}
+              index={index}
+              isRevealed={revealedCards[index]}
+              onReveal={() => revealCard(index)}
+              symbol={drawnSymbols[index] || symbols[index]}
+              language={language}
+            />
+          ))}
         </div>
+
+        {/* Instructions */}
+        {gameStarted && !allCardsRevealed && (
+          <div className="text-yellow-200 text-center text-lg">
+            {text[language].instructions}
+          </div>
+        )}
+
+        {/* Results Display */}
+        {showResults && results && (
+          <div className="bg-gradient-to-b from-yellow-100 to-yellow-50 rounded-lg p-8 shadow-2xl border-4 border-yellow-400 max-w-2xl">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold text-red-800 mb-2">{text[language].results}</h2>
+              <div className="w-24 h-0.5 bg-red-600 mx-auto"></div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-6 mb-6">
+              <div className="text-center p-4 bg-red-100 rounded-lg">
+                <h3 className="text-lg font-semibold text-red-800 mb-2">{text[language].totalScore}</h3>
+                <div className="text-4xl font-bold text-red-600">{results.totalScore}</div>
+              </div>
+              <div className="text-center p-4 bg-red-100 rounded-lg">
+                <h3 className="text-lg font-semibold text-red-800 mb-2">{text[language].dominantElement}</h3>
+                <div className="text-4xl font-bold text-red-600">{results.dominantElement}</div>
+              </div>
+            </div>
+
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-semibold text-red-800 mb-3">{text[language].fortuneSummary}</h3>
+              <p className="text-red-700 leading-relaxed">{text[language].yourPath}</p>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-4 mb-6">
+              {drawnSymbols.map((symbol, index) => (
+                <div key={index} className="flex items-center gap-2 bg-white rounded-lg p-3 shadow">
+                  <symbol.icon size={20} className="text-red-600" />
+                  <span className="font-medium text-red-800">{symbol.name[language]}</span>
+                  <span className="text-red-600 font-bold">({symbol.number})</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <Button 
+                onClick={() => setShowResults(false)}
+                className="bg-red-600 text-white hover:bg-red-700 px-8 py-3 rounded-md font-medium"
+              >
+                {text[language].closeResults}
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Control Buttons - Bottom Right */}
+      <div className="fixed bottom-6 right-6 flex flex-col gap-3">
+        <Button 
+          onClick={startGame}
+          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 rounded-md font-medium"
+        >
+          {gameStarted ? text[language].newGame : text[language].start}
+        </Button>
+        <Button 
+          onClick={showSettings}
+          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 rounded-md font-medium"
+        >
+          {text[language].setting}
+        </Button>
+        <Button 
+          onClick={() => setLanguage(prev => prev === 'en' ? 'zh' : 'en')}
+          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 rounded-md font-medium"
+        >
+          {text[language].language}
+        </Button>
+        <Button 
+          onClick={showCredits}
+          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 rounded-md font-medium"
+        >
+          {text[language].credit}
+        </Button>
       </div>
     </div>
   );
