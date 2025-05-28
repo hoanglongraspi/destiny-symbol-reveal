@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -148,6 +147,7 @@ const Index = () => {
   const [revealedCards, setRevealedCards] = useState<boolean[]>([false, false, false, false, false]);
   const [drawnSymbols, setDrawnSymbols] = useState<any[]>([]);
   const [gameStarted, setGameStarted] = useState(false);
+  const [showResults, setShowResults] = useState(false);
 
   const text = {
     en: {
@@ -158,7 +158,13 @@ const Index = () => {
       credit: "Credit",
       language: "Language",
       instructions: "Click on a card to reveal your fortune",
-      newGame: "New Game"
+      newGame: "New Game",
+      results: "Your Complete Fortune Reading",
+      totalScore: "Total Fortune Score",
+      dominantElement: "Dominant Element",
+      fortuneSummary: "Fortune Summary",
+      yourPath: "Your destined path combines the wisdom of ancient China. The elements guide your journey through life's seasons.",
+      closeResults: "Close Results"
     },
     zh: {
       title: "中华占卜卡",
@@ -168,9 +174,18 @@ const Index = () => {
       credit: "关于",
       language: "语言",
       instructions: "点击卡片揭示你的运势",
-      newGame: "新游戏"
+      newGame: "新游戏",
+      results: "你的完整运势解读",
+      totalScore: "总运势分数",
+      dominantElement: "主导元素",
+      fortuneSummary: "运势总结",
+      yourPath: "你的命运之路融合了古代中国的智慧。五行元素指引你走过人生的四季。",
+      closeResults: "关闭结果"
     }
   };
+
+  // Check if all cards are revealed
+  const allCardsRevealed = revealedCards.every(revealed => revealed);
 
   const revealCard = (index: number) => {
     if (revealedCards[index] || !gameStarted) return;
@@ -199,10 +214,20 @@ const Index = () => {
     }, 600);
   };
 
+  // Check for results display when all cards are revealed
+  React.useEffect(() => {
+    if (allCardsRevealed && drawnSymbols.length === 5 && gameStarted) {
+      setTimeout(() => {
+        setShowResults(true);
+      }, 1000);
+    }
+  }, [allCardsRevealed, drawnSymbols.length, gameStarted]);
+
   const startGame = () => {
     setGameStarted(true);
     setRevealedCards([false, false, false, false, false]);
     setDrawnSymbols([]);
+    setShowResults(false);
     toast({
       title: language === 'en' ? "Game Started!" : "游戏开始！",
       description: text[language].instructions,
@@ -230,6 +255,25 @@ const Index = () => {
     });
   };
 
+  // Calculate results
+  const calculateResults = () => {
+    if (drawnSymbols.length !== 5) return null;
+    
+    const totalScore = drawnSymbols.reduce((sum, symbol) => sum + symbol.number, 0);
+    const elementCounts = drawnSymbols.reduce((acc, symbol) => {
+      acc[symbol.chineseElement] = (acc[symbol.chineseElement] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const dominantElement = Object.entries(elementCounts).reduce((a, b) => 
+      elementCounts[a[0]] > elementCounts[b[0]] ? a : b
+    )[0];
+
+    return { totalScore, dominantElement };
+  };
+
+  const results = calculateResults();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-900 to-red-800 flex flex-col items-center justify-center p-8">
       {/* Header with Chinese styling */}
@@ -239,47 +283,97 @@ const Index = () => {
         <div className="w-32 h-0.5 bg-yellow-400 mx-auto mt-4"></div>
       </div>
 
-      {/* Card Area */}
-      <div className="flex gap-6 mb-12">
-        {[0, 1, 2, 3, 4].map((index) => (
-          <FortuneCard
-            key={index}
-            index={index}
-            isRevealed={revealedCards[index]}
-            onReveal={() => revealCard(index)}
-            symbol={drawnSymbols[index] || symbols[index]}
-            language={language}
-          />
-        ))}
-      </div>
-
-      {/* Instructions */}
-      {gameStarted && (
-        <div className="text-yellow-200 text-center mb-8 text-lg">
-          {text[language].instructions}
+      {/* Main content area */}
+      <div className="flex gap-12 items-start">
+        {/* Control Buttons - Left aligned */}
+        <div className="flex flex-col gap-3 items-start">
+          <Button 
+            onClick={startGame}
+            className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-8 py-3 rounded-md font-medium w-32"
+          >
+            {gameStarted ? text[language].newGame : text[language].start}
+          </Button>
+          <Button 
+            onClick={showSettings}
+            className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-8 py-3 rounded-md font-medium w-32"
+          >
+            {text[language].setting}
+          </Button>
+          <Button 
+            onClick={() => setLanguage(prev => prev === 'en' ? 'zh' : 'en')}
+            className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-8 py-3 rounded-md font-medium w-32"
+          >
+            {text[language].language}
+          </Button>
         </div>
-      )}
 
-      {/* Control Buttons - Right aligned like reference */}
-      <div className="flex flex-col gap-3 items-end">
-        <Button 
-          onClick={startGame}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-8 py-3 rounded-md font-medium w-32"
-        >
-          {gameStarted ? text[language].newGame : text[language].start}
-        </Button>
-        <Button 
-          onClick={showSettings}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-8 py-3 rounded-md font-medium w-32"
-        >
-          {text[language].setting}
-        </Button>
-        <Button 
-          onClick={() => setLanguage(prev => prev === 'en' ? 'zh' : 'en')}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-8 py-3 rounded-md font-medium w-32"
-        >
-          {text[language].language}
-        </Button>
+        {/* Card Area */}
+        <div className="flex flex-col items-center">
+          <div className="flex gap-6 mb-8">
+            {[0, 1, 2, 3, 4].map((index) => (
+              <FortuneCard
+                key={index}
+                index={index}
+                isRevealed={revealedCards[index]}
+                onReveal={() => revealCard(index)}
+                symbol={drawnSymbols[index] || symbols[index]}
+                language={language}
+              />
+            ))}
+          </div>
+
+          {/* Instructions */}
+          {gameStarted && !allCardsRevealed && (
+            <div className="text-yellow-200 text-center text-lg">
+              {text[language].instructions}
+            </div>
+          )}
+
+          {/* Results Display */}
+          {showResults && results && (
+            <div className="bg-gradient-to-b from-yellow-100 to-yellow-50 rounded-lg p-8 shadow-2xl border-4 border-yellow-400 max-w-2xl">
+              <div className="text-center mb-6">
+                <h2 className="text-3xl font-bold text-red-800 mb-2">{text[language].results}</h2>
+                <div className="w-24 h-0.5 bg-red-600 mx-auto"></div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6 mb-6">
+                <div className="text-center p-4 bg-red-100 rounded-lg">
+                  <h3 className="text-lg font-semibold text-red-800 mb-2">{text[language].totalScore}</h3>
+                  <div className="text-4xl font-bold text-red-600">{results.totalScore}</div>
+                </div>
+                <div className="text-center p-4 bg-red-100 rounded-lg">
+                  <h3 className="text-lg font-semibold text-red-800 mb-2">{text[language].dominantElement}</h3>
+                  <div className="text-4xl font-bold text-red-600">{results.dominantElement}</div>
+                </div>
+              </div>
+
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-semibold text-red-800 mb-3">{text[language].fortuneSummary}</h3>
+                <p className="text-red-700 leading-relaxed">{text[language].yourPath}</p>
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-4 mb-6">
+                {drawnSymbols.map((symbol, index) => (
+                  <div key={index} className="flex items-center gap-2 bg-white rounded-lg p-3 shadow">
+                    <symbol.icon size={20} className="text-red-600" />
+                    <span className="font-medium text-red-800">{symbol.name[language]}</span>
+                    <span className="text-red-600 font-bold">({symbol.number})</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="text-center">
+                <Button 
+                  onClick={() => setShowResults(false)}
+                  className="bg-red-600 text-white hover:bg-red-700 px-8 py-3 rounded-md font-medium"
+                >
+                  {text[language].closeResults}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
