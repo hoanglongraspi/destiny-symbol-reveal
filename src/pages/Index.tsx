@@ -221,7 +221,7 @@ const Index = () => {
 
   const text = {
     en: {
-      title: "Destiny Symbol Reveal",
+      title: "Chinese Fortune Cards",
       subtitle: "Click on cards to reveal your mystical numbers",
       start: "Start",
       setting: "Setting", 
@@ -229,7 +229,7 @@ const Index = () => {
       language: "Language",
       instructions: "Click on a card to reveal your fortune number",
       newGame: "New Game",
-      results: "Your Complete Destiny Reading",
+      results: "Your Complete Fortune Reading",
       totalScore: "Total Fortune Score",
       dominantElement: "Dominant Element",
       fortuneSummary: "Fortune Summary",
@@ -237,7 +237,7 @@ const Index = () => {
       closeResults: "Close Results"
     },
     zh: {
-      title: "命运符号揭示",
+      title: "中华占卜卡",
       subtitle: "点击卡片揭示你的神秘数字",
       start: "开始",
       setting: "设置",
@@ -245,8 +245,8 @@ const Index = () => {
       language: "语言",
       instructions: "点击卡片揭示你的命运数字",
       newGame: "新游戏",
-      results: "你的完整命运解读",
-      totalScore: "总命运分数",
+      results: "你的完整运势解读",
+      totalScore: "总运势分数",
       dominantElement: "主导元素",
       fortuneSummary: "运势总结",
       yourPath: "你的命运之路融合了古代中国的智慧。五行元素指引你走过人生的四季。",
@@ -258,7 +258,19 @@ const Index = () => {
   const allCardsRevealed = revealedCards.every(revealed => revealed);
 
   const revealCard = (index: number) => {
-    if (revealedCards[index] || !gameStarted) return;
+    if (revealedCards[index]) return;
+    
+    // Show notice if game hasn't started yet
+    if (!gameStarted) {
+      toast({
+        title: language === 'en' ? "Please Start the Game First!" : "请先开始游戏！",
+        description: language === 'en' 
+          ? "Click the 'Start' button to begin revealing your destiny numbers." 
+          : "点击'开始'按钮开始揭示你的命运数字。",
+        duration: 3000,
+      });
+      return;
+    }
     
     // Get the symbol for this specific position
     const cardSymbol = symbols[index];
