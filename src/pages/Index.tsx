@@ -1,70 +1,70 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Triangle, Circle, Star, X } from 'lucide-react';
+import { Triangle, Circle, Star, X, Zap, DoorOpen, Cloud, Mountain } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
-// Enhanced cultural symbols with more Chinese details
+// Enhanced cultural symbols with specific number ranges for destiny reading
 const symbols = [
   {
     id: 1,
-    icon: Triangle,
-    name: { en: "Mountain", zh: "山" },
-    number: 8,
+    icon: Zap,
+    name: { en: "Divine (神)", zh: "神" },
+    numberRange: [1, 8], // 神: 1-8
     meaning: {
-      en: "The sacred peaks bring stability and eternal strength. Like Mount Tai, your foundation will endure through all seasons.",
-      zh: "神圣的山峰带来稳定和永恒的力量。如泰山般，你的根基将历经四季而不摇。"
+      en: "The divine realm speaks through sacred numbers. Your spiritual fortune is revealed.",
+      zh: "神圣领域通过神圣数字说话。你的精神财富被揭示。"
     },
-    chineseElement: "土",
-    direction: "North"
+    chineseElement: "神",
+    direction: "Center"
   },
   {
     id: 2,
-    icon: Circle,
-    name: { en: "Unity", zh: "圆满" },
-    number: 9,
-    meaning: {
-      en: "The perfect circle represents harmony in the Middle Kingdom. Heaven and Earth unite in your favor.",
-      zh: "完美的圆代表中华和谐。天地合一，助你成功。"
-    },
-    chineseElement: "金",
-    direction: "West"
-  },
-  {
-    id: 3,
     icon: Star,
-    name: { en: "Guidance", zh: "北斗" },
-    number: 7,
+    name: { en: "Star (星)", zh: "星" },
+    numberRange: [1, 9], // 星: 1-9
     meaning: {
-      en: "The North Star guides travelers home. Ancient wisdom illuminates your destined path.",
-      zh: "北斗星指引游子归家。古老智慧照亮你的命运之路。"
+      en: "The celestial stars guide your destiny. Nine paths of fortune await you.",
+      zh: "天上的星星指引你的命运。九条财富之路等待着你。"
     },
-    chineseElement: "水",
+    chineseElement: "星",
     direction: "North"
   },
   {
-    id: 4,
-    icon: X,
-    name: { en: "Crossroads", zh: "十字" },
-    number: 4,
+    id: 3,
+    icon: DoorOpen,
+    name: { en: "Gate (门)", zh: "门" },
+    numberRange: [1, 8], // 门: 1-8
     meaning: {
-      en: "At the crossroads of destiny, choose with the wisdom of Confucius. Balance is the way.",
-      zh: "在命运的十字路口，以孔子的智慧选择。平衡即是道。"
+      en: "The mystical gates open to reveal your path. Eight doorways to fortune.",
+      zh: "神秘之门打开，揭示你的道路。通往财富的八道门。"
     },
-    chineseElement: "木",
+    chineseElement: "门",
     direction: "East"
   },
   {
-    id: 5,
-    icon: Circle,
-    name: { en: "Fortune", zh: "福运" },
-    number: 6,
+    id: 4,
+    icon: Cloud,
+    name: { en: "Heaven (天)", zh: "天" },
+    numberRange: [1, 10], // 天: 1-10
     meaning: {
-      en: "The dragon brings prosperity from the eastern seas. Your fortune flows like the Yellow River.",
-      zh: "龙从东海带来繁荣。你的福运如黄河般奔流。"
+      en: "Heaven bestows its blessings. Ten levels of celestial favor shine upon you.",
+      zh: "天赐福泽。十层天恩照耀着你。"
     },
-    chineseElement: "火",
+    chineseElement: "天",
     direction: "South"
+  },
+  {
+    id: 5,
+    icon: Mountain,
+    name: { en: "Earth (地)", zh: "地" },
+    numberRange: [1, 10], // 地: 1-10
+    meaning: {
+      en: "Mother Earth provides her strength. Ten foundations of earthly power support you.",
+      zh: "大地母亲提供力量。十种大地力量的根基支撑着你。"
+    },
+    chineseElement: "地",
+    direction: "West"
   }
 ];
 
@@ -83,98 +83,131 @@ const FortuneCard = ({
 }) => {
   const IconComponent = symbol.icon;
   
+  // Safety check for undefined symbol
+  if (!symbol) {
+    return (
+      <div className="relative w-44 h-64 cursor-pointer bg-gray-200 rounded-3xl border-4 border-gray-300 flex items-center justify-center">
+        <span className="text-gray-500">Loading...</span>
+      </div>
+    );
+  }
+  
   return (
     <div 
-      className="relative w-28 h-40 cursor-pointer transition-all duration-300 hover:scale-105 hover:rotate-1"
+      className="relative w-44 h-64 cursor-pointer transition-all duration-700 hover:scale-105 hover:rotate-1 hover:shadow-2xl hover:z-10 group"
       onClick={onReveal}
     >
-      {/* Card Back with Chinese patterns */}
-      <div className={`absolute inset-0 bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl border-3 border-amber-300 shadow-xl transition-all duration-700 ${
-        isRevealed ? 'opacity-0 rotate-y-180' : 'opacity-100'
+      {/* Card Back - Elegant Red Theme */}
+      <div className={`absolute inset-0 bg-gradient-to-br from-red-800 via-red-700 to-red-900 rounded-3xl border-4 border-yellow-400 shadow-2xl transition-all duration-1000 ${
+        isRevealed ? 'opacity-0 rotate-y-180 scale-95' : 'opacity-100 scale-100'
       }`}>
         <div className="flex items-center justify-center h-full relative overflow-hidden">
-          {/* Traditional Chinese cloud pattern background */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="w-full h-full bg-gradient-to-br from-amber-200 to-amber-300"></div>
-            <div className="absolute top-2 left-2 w-6 h-6 border-2 border-amber-400 rounded-full opacity-30"></div>
-            <div className="absolute bottom-2 right-2 w-4 h-4 border-2 border-amber-400 rounded-full opacity-30"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 border border-amber-400 rounded-full opacity-20"></div>
+          {/* Elegant background pattern */}
+          <div className="absolute inset-0 opacity-20">
+            {/* Radial gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-radial from-yellow-400/20 via-transparent to-transparent"></div>
+            
+            {/* Subtle geometric pattern */}
+            <div className="absolute top-1/4 left-1/4 w-24 h-24 border-2 border-yellow-400/30 rounded-full animate-pulse"></div>
+            <div className="absolute bottom-1/4 right-1/4 w-16 h-16 border border-yellow-300/20 rounded-lg rotate-45"></div>
+            
+            {/* Flowing lines */}
+            <div className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent"></div>
+            <div className="absolute bottom-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent"></div>
           </div>
           
-          {/* Corner decorations */}
-          <div className="absolute top-1 left-1 w-3 h-3 border-l-2 border-t-2 border-amber-400"></div>
-          <div className="absolute top-1 right-1 w-3 h-3 border-r-2 border-t-2 border-amber-400"></div>
-          <div className="absolute bottom-1 left-1 w-3 h-3 border-l-2 border-b-2 border-amber-400"></div>
-          <div className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-amber-400"></div>
+          {/* Minimalist corner accents */}
+          <div className="absolute top-4 left-4 w-8 h-8 border-l-4 border-t-4 border-yellow-400 rounded-tl-xl opacity-60"></div>
+          <div className="absolute top-4 right-4 w-8 h-8 border-r-4 border-t-4 border-yellow-400 rounded-tr-xl opacity-60"></div>
+          <div className="absolute bottom-4 left-4 w-8 h-8 border-l-4 border-b-4 border-yellow-400 rounded-bl-xl opacity-60"></div>
+          <div className="absolute bottom-4 right-4 w-8 h-8 border-r-4 border-b-4 border-yellow-400 rounded-br-xl opacity-60"></div>
           
-          {/* Main icon with glow effect */}
-          <div className="relative z-10 p-2 bg-amber-200/50 rounded-full">
-            <div className="text-amber-700 text-3xl drop-shadow-lg">
-              {index === 0 && <Triangle size={32} />}
-              {index === 1 && <Circle size={32} />}
-              {index === 2 && <Star size={32} />}
-              {index === 3 && <X size={32} />}
-              {index === 4 && <Circle size={32} />}
+          {/* Central focus area */}
+          <div className="relative z-10 p-8 bg-gradient-to-br from-yellow-400/20 to-yellow-500/30 rounded-full shadow-2xl border-2 border-yellow-400/50 backdrop-blur-sm">
+            <div className="text-yellow-300 text-6xl drop-shadow-2xl filter brightness-125">
+              {index === 0 && <Zap size={56} className="drop-shadow-2xl" />}
+              {index === 1 && <Star size={56} className="drop-shadow-2xl" />}
+              {index === 2 && <DoorOpen size={56} className="drop-shadow-2xl" />}
+              {index === 3 && <Cloud size={56} className="drop-shadow-2xl" />}
+              {index === 4 && <Mountain size={56} className="drop-shadow-2xl" />}
             </div>
           </div>
         </div>
       </div>
       
-      {/* Card Front with enhanced Chinese styling */}
-      <div className={`absolute inset-0 bg-gradient-to-br from-red-700 via-red-600 to-red-800 rounded-xl border-3 border-yellow-400 shadow-xl transition-all duration-700 ${
-        isRevealed ? 'opacity-100 rotate-y-0' : 'opacity-0 rotate-y-180'
+      {/* Card Front - Premium Red Theme with Prominent Number */}
+      <div className={`absolute inset-0 bg-gradient-to-br from-red-900 via-red-800 to-red-950 rounded-3xl border-4 border-yellow-400 shadow-3xl transition-all duration-1000 ${
+        isRevealed ? 'opacity-100 rotate-y-0 scale-100' : 'opacity-0 rotate-y-180 scale-95'
       }`}>
-        <div className="flex flex-col items-center justify-center h-full p-3 relative overflow-hidden">
-          {/* Traditional Chinese decorative background */}
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-300 to-transparent"></div>
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-300 to-transparent"></div>
-            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-yellow-300 to-transparent"></div>
-            <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-yellow-300 to-transparent"></div>
-          </div>
+        <div className="flex flex-col h-full p-6 relative overflow-hidden">
+          {/* Premium background effects */}
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/5 via-transparent to-yellow-400/10 rounded-3xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-red-700/20 to-transparent rounded-3xl"></div>
           
-          {/* Inner decorative frame */}
-          <div className="absolute top-2 left-2 right-2 bottom-2 border border-yellow-300/50 rounded-lg"></div>
-          
-          {/* Traditional corner ornaments */}
-          <div className="absolute top-2 left-2 text-yellow-300 text-xs">◆</div>
-          <div className="absolute top-2 right-2 text-yellow-300 text-xs">◆</div>
-          <div className="absolute bottom-2 left-2 text-yellow-300 text-xs">◆</div>
-          <div className="absolute bottom-2 right-2 text-yellow-300 text-xs">◆</div>
-          
-          {/* Element symbol with background */}
-          <div className="absolute top-3 right-3 bg-yellow-300/20 rounded-full w-6 h-6 flex items-center justify-center">
-            <span className="text-yellow-300 text-sm font-bold">{symbol.chineseElement}</span>
-          </div>
-          
-          {/* Main symbol with enhanced styling */}
-          <div className="relative z-10 mb-2 p-2 bg-yellow-300/10 rounded-full">
-            <IconComponent size={28} className="text-yellow-300 drop-shadow-lg" />
-          </div>
-          
-          {/* Chinese and English name with background */}
-          <div className="relative z-10 bg-yellow-300/10 rounded-md px-2 py-1 mb-2">
-            <div className="text-yellow-300 text-sm font-bold text-center tracking-wide">
-              {symbol.name[language]}
+          {/* Header Section */}
+          <div className="flex justify-between items-start mb-3">
+            {/* PROMINENT Number in top left - Main feature */}
+            <div className="relative">
+              {/* Glow effects behind number */}
+              <div className="absolute inset-0 bg-yellow-400/25 rounded-full blur-sm"></div>
+              
+              {/* Main number container */}
+              <div className="relative bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full w-9 h-9 flex items-center justify-center border border-yellow-300 shadow-md">
+                <span className="text-red-900 text-sm font-bold drop-shadow-sm">
+                  {symbol.generatedNumber || '?'}
+                </span>
+              </div>
+            </div>
+            
+            {/* Direction indicator */}
+            <div className="bg-red-700/60 rounded-full px-3 py-1 border border-yellow-400/30 backdrop-blur-sm">
+              <span className="text-yellow-300 text-xs font-semibold tracking-wide">
+                {language === 'en' ? symbol.direction : 
+                 symbol.direction === 'North' ? '北' :
+                 symbol.direction === 'South' ? '南' :
+                 symbol.direction === 'East' ? '东' : 
+                 symbol.direction === 'West' ? '西' : '中'}
+              </span>
             </div>
           </div>
           
-          {/* Lucky number with traditional styling */}
-          <div className="relative z-10 bg-yellow-300/20 rounded-full w-8 h-8 flex items-center justify-center mb-2">
-            <span className="text-yellow-300 text-xl font-bold">{symbol.number}</span>
+          {/* Main Content Section */}
+          <div className="flex-1 flex flex-col items-center justify-center">
+            {/* Icon with premium styling - CENTER */}
+            <div className="mb-4 p-4 bg-gradient-to-br from-yellow-400/20 to-yellow-500/30 rounded-2xl shadow-xl border border-yellow-400/40 backdrop-blur-sm">
+              <IconComponent size={48} className="text-yellow-300 drop-shadow-2xl filter brightness-125" />
+            </div>
+            
+            {/* Name display with better typography */}
+            <div className="mb-3 text-center">
+              <div className="text-yellow-100 text-xl font-bold mb-1 tracking-wide drop-shadow-lg">
+                {symbol.name.en.split('(')[0].trim()}
+              </div>
+              <div className="text-yellow-300 text-lg font-medium tracking-widest">
+                ({symbol.chineseElement})
+              </div>
+            </div>
+            
+            {/* Range display at bottom */}
+            <div className="text-center">
+              <div className="bg-red-700/40 rounded-lg px-3 py-1 border border-yellow-400/20 backdrop-blur-sm">
+                <span className="text-yellow-200 text-sm font-medium tracking-wide">
+                  {symbol.numberRange[0]}-{symbol.numberRange[1]}
+                </span>
+              </div>
+            </div>
           </div>
           
-          {/* Direction indicator with Chinese styling */}
-          <div className="relative z-10 bg-yellow-200/10 rounded px-2 py-0.5">
-            <span className="text-yellow-200 text-xs opacity-90">
-              {language === 'en' ? symbol.direction : 
-               symbol.direction === 'North' ? '北' :
-               symbol.direction === 'South' ? '南' :
-               symbol.direction === 'East' ? '东' : '西'}
-            </span>
-          </div>
+          {/* Subtle corner accents */}
+          <div className="absolute top-3 left-3 text-yellow-400/60 text-sm">◇</div>
+          <div className="absolute top-3 right-3 text-yellow-400/60 text-sm">◇</div>
+          <div className="absolute bottom-3 left-3 text-yellow-400/60 text-sm">◇</div>
+          <div className="absolute bottom-3 right-3 text-yellow-400/60 text-sm">◇</div>
         </div>
       </div>
+      
+      {/* Hover glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 via-transparent to-yellow-400/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none blur-sm"></div>
     </div>
   );
 };
@@ -188,15 +221,15 @@ const Index = () => {
 
   const text = {
     en: {
-      title: "Chinese Fortune Cards",
-      subtitle: "Discover ancient wisdom through traditional symbols",
+      title: "Destiny Symbol Reveal",
+      subtitle: "Click on cards to reveal your mystical numbers",
       start: "Start",
       setting: "Setting", 
       credit: "Credit",
       language: "Language",
-      instructions: "Click on a card to reveal your fortune",
+      instructions: "Click on a card to reveal your fortune number",
       newGame: "New Game",
-      results: "Your Complete Fortune Reading",
+      results: "Your Complete Destiny Reading",
       totalScore: "Total Fortune Score",
       dominantElement: "Dominant Element",
       fortuneSummary: "Fortune Summary",
@@ -204,16 +237,16 @@ const Index = () => {
       closeResults: "Close Results"
     },
     zh: {
-      title: "中华占卜卡",
-      subtitle: "通过传统符号发现古老智慧",
+      title: "命运符号揭示",
+      subtitle: "点击卡片揭示你的神秘数字",
       start: "开始",
       setting: "设置",
-      credit: "关于",
+      credit: "信用",
       language: "语言",
-      instructions: "点击卡片揭示你的运势",
+      instructions: "点击卡片揭示你的命运数字",
       newGame: "新游戏",
-      results: "你的完整运势解读",
-      totalScore: "总运势分数",
+      results: "你的完整命运解读",
+      totalScore: "总命运分数",
       dominantElement: "主导元素",
       fortuneSummary: "运势总结",
       yourPath: "你的命运之路融合了古代中国的智慧。五行元素指引你走过人生的四季。",
@@ -227,7 +260,18 @@ const Index = () => {
   const revealCard = (index: number) => {
     if (revealedCards[index] || !gameStarted) return;
     
-    const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+    // Get the symbol for this specific position
+    const cardSymbol = symbols[index];
+    
+    // Generate random number within the specific range for this card
+    const [min, max] = cardSymbol.numberRange;
+    const generatedNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+    
+    // Create symbol with generated number
+    const symbolWithNumber = {
+      ...cardSymbol,
+      generatedNumber: generatedNumber
+    };
     
     setRevealedCards(prev => {
       const newRevealed = [...prev];
@@ -237,15 +281,15 @@ const Index = () => {
     
     setDrawnSymbols(prev => {
       const newSymbols = [...prev];
-      newSymbols[index] = randomSymbol;
+      newSymbols[index] = symbolWithNumber;
       return newSymbols;
     });
 
     // Show detailed fortune message
     setTimeout(() => {
       toast({
-        title: `${randomSymbol.name[language]} (${randomSymbol.number}) - ${randomSymbol.chineseElement}`,
-        description: randomSymbol.meaning[language],
+        title: `${symbolWithNumber.name[language]} (${generatedNumber}) - ${symbolWithNumber.chineseElement}`,
+        description: symbolWithNumber.meaning[language],
         duration: 6000,
       });
     }, 600);
@@ -254,9 +298,13 @@ const Index = () => {
   // Check for results display when all cards are revealed
   React.useEffect(() => {
     if (allCardsRevealed && drawnSymbols.length === 5 && gameStarted) {
-      setTimeout(() => {
-        setShowResults(true);
-      }, 1000);
+      // Additional safety check to ensure all symbols are valid
+      const validSymbols = drawnSymbols.filter(symbol => symbol && typeof symbol.generatedNumber === 'number');
+      if (validSymbols.length === 5) {
+        setTimeout(() => {
+          setShowResults(true);
+        }, 1000);
+      }
     }
   }, [allCardsRevealed, drawnSymbols.length, gameStarted]);
 
@@ -296,8 +344,14 @@ const Index = () => {
   const calculateResults = () => {
     if (drawnSymbols.length !== 5) return null;
     
-    const totalScore = drawnSymbols.reduce((sum, symbol) => sum + symbol.number, 0);
-    const elementCounts = drawnSymbols.reduce((acc, symbol) => {
+    // Filter out any undefined symbols and validate all symbols have generatedNumber
+    const validSymbols = drawnSymbols.filter(symbol => symbol && typeof symbol.generatedNumber === 'number');
+    
+    // Only calculate if we have all 5 valid symbols
+    if (validSymbols.length !== 5) return null;
+    
+    const totalScore = validSymbols.reduce((sum, symbol) => sum + symbol.generatedNumber, 0);
+    const elementCounts = validSymbols.reduce((acc, symbol) => {
       acc[symbol.chineseElement] = (acc[symbol.chineseElement] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
@@ -358,19 +412,21 @@ const Index = () => {
       <div className="flex flex-col items-center relative z-10">
         {/* Card Area with enhanced background */}
         <div className="relative">
-          {/* Mystical background glow */}
-          <div className="absolute inset-0 bg-yellow-400/5 rounded-3xl blur-xl transform scale-110"></div>
+          {/* Enhanced mystical background glow */}
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/15 via-yellow-300/8 to-yellow-400/15 rounded-4xl blur-3xl transform scale-150"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 via-transparent to-red-600/10 rounded-4xl blur-2xl transform scale-125"></div>
           
-          <div className="flex gap-8 mb-8 relative z-10 p-6 bg-black/10 rounded-2xl backdrop-blur-sm border border-yellow-400/20">
+          <div className="flex gap-8 mb-10 relative z-10 p-8 bg-gradient-to-br from-red-900/40 via-red-800/30 to-red-900/40 rounded-4xl backdrop-blur-md border-2 border-yellow-400/40 shadow-3xl">
             {[0, 1, 2, 3, 4].map((index) => (
-              <FortuneCard
-                key={index}
-                index={index}
-                isRevealed={revealedCards[index]}
-                onReveal={() => revealCard(index)}
-                symbol={drawnSymbols[index] || symbols[index]}
-                language={language}
-              />
+              <div key={index} className="transform transition-all duration-500 hover:translate-y-[-8px]">
+                <FortuneCard
+                  index={index}
+                  isRevealed={revealedCards[index]}
+                  onReveal={() => revealCard(index)}
+                  symbol={drawnSymbols[index] || symbols[index]}
+                  language={language}
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -422,11 +478,11 @@ const Index = () => {
               </div>
 
               <div className="flex flex-wrap justify-center gap-4 mb-6">
-                {drawnSymbols.map((symbol, index) => (
+                {drawnSymbols.filter(symbol => symbol && symbol.generatedNumber).map((symbol, index) => (
                   <div key={index} className="flex items-center gap-2 bg-white rounded-xl p-4 shadow-lg border border-red-100 hover:shadow-xl transition-shadow">
                     <symbol.icon size={20} className="text-red-600" />
                     <span className="font-medium text-red-800">{symbol.name[language]}</span>
-                    <span className="text-red-600 font-bold">({symbol.number})</span>
+                    <span className="text-red-600 font-bold">({symbol.generatedNumber})</span>
                   </div>
                 ))}
               </div>
