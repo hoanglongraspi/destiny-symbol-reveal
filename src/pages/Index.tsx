@@ -81,6 +81,7 @@ const FortuneCard = ({
   symbol: any;
   language: 'en' | 'zh';
 }) => {
+  const [imageError, setImageError] = useState(false);
   const IconComponent = symbol.icon;
   
   // Safety check for undefined symbol
@@ -97,42 +98,55 @@ const FortuneCard = ({
       className="relative w-44 h-64 cursor-pointer transition-all duration-700 hover:scale-105 hover:rotate-1 hover:shadow-2xl hover:z-10 group"
       onClick={onReveal}
     >
-      {/* Card Back - Elegant Red Theme */}
-      <div className={`absolute inset-0 bg-gradient-to-br from-red-800 via-red-700 to-red-900 rounded-3xl border-4 border-yellow-400 shadow-2xl transition-all duration-1000 ${
+      {/* Card Back - Using Image with React fallback */}
+      <div className={`absolute inset-0 rounded-3xl border-4 border-yellow-400 shadow-2xl transition-all duration-1000 overflow-hidden ${
         isRevealed ? 'opacity-0 rotate-y-180 scale-95' : 'opacity-100 scale-100'
       }`}>
-        <div className="flex items-center justify-center h-full relative overflow-hidden">
-          {/* Elegant background pattern */}
-          <div className="absolute inset-0 opacity-20">
-            {/* Radial gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-radial from-yellow-400/20 via-transparent to-transparent"></div>
-            
-            {/* Subtle geometric pattern */}
-            <div className="absolute top-1/4 left-1/4 w-24 h-24 border-2 border-yellow-400/30 rounded-full animate-pulse"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-16 h-16 border border-yellow-300/20 rounded-lg rotate-45"></div>
-            
-            {/* Flowing lines */}
-            <div className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent"></div>
-            <div className="absolute bottom-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent"></div>
+        {!imageError ? (
+          <div className="w-full h-full relative bg-gradient-to-br from-red-900 via-red-800 to-red-950 rounded-2xl">
+            <img 
+              src={`/pic/${index + 1}.png`} 
+              alt="Card Back"
+              className="w-full h-full object-cover rounded-2xl"
+              style={{
+                objectPosition: 'center center',
+                filter: 'brightness(1.1) contrast(1.05)'
+              }}
+              onError={() => setImageError(true)}
+              onLoad={() => console.log(`Card ${index + 1} back image loaded successfully`)}
+            />
           </div>
-          
-          {/* Minimalist corner accents */}
-          <div className="absolute top-4 left-4 w-8 h-8 border-l-4 border-t-4 border-yellow-400 rounded-tl-xl opacity-60"></div>
-          <div className="absolute top-4 right-4 w-8 h-8 border-r-4 border-t-4 border-yellow-400 rounded-tr-xl opacity-60"></div>
-          <div className="absolute bottom-4 left-4 w-8 h-8 border-l-4 border-b-4 border-yellow-400 rounded-bl-xl opacity-60"></div>
-          <div className="absolute bottom-4 right-4 w-8 h-8 border-r-4 border-b-4 border-yellow-400 rounded-br-xl opacity-60"></div>
-          
-          {/* Central focus area */}
-          <div className="relative z-10 p-8 bg-gradient-to-br from-yellow-400/20 to-yellow-500/30 rounded-full shadow-2xl border-2 border-yellow-400/50 backdrop-blur-sm">
-            <div className="text-yellow-300 text-6xl drop-shadow-2xl filter brightness-125">
-              {index === 0 && <Zap size={56} className="drop-shadow-2xl" />}
-              {index === 1 && <Star size={56} className="drop-shadow-2xl" />}
-              {index === 2 && <DoorOpen size={56} className="drop-shadow-2xl" />}
-              {index === 3 && <Cloud size={56} className="drop-shadow-2xl" />}
-              {index === 4 && <Mountain size={56} className="drop-shadow-2xl" />}
+        ) : (
+          /* Fallback styled version */
+          <div className="w-full h-full bg-gradient-to-br from-red-800 via-red-700 to-red-900 rounded-2xl flex items-center justify-center relative overflow-hidden">
+            {/* Elegant background pattern */}
+            <div className="absolute inset-0 opacity-20">
+              {/* Radial gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-radial from-yellow-400/20 via-transparent to-transparent"></div>
+              
+              {/* Subtle geometric pattern */}
+              <div className="absolute top-1/4 left-1/4 w-24 h-24 border-2 border-yellow-400/30 rounded-full animate-pulse"></div>
+              <div className="absolute bottom-1/4 right-1/4 w-16 h-16 border border-yellow-300/20 rounded-lg rotate-45"></div>
+              
+              {/* Flowing lines */}
+              <div className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent"></div>
+              <div className="absolute bottom-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent"></div>
+            </div>
+            
+            {/* Minimalist corner accents */}
+            <div className="absolute top-4 left-4 w-8 h-8 border-l-4 border-t-4 border-yellow-400 rounded-tl-xl opacity-60"></div>
+            <div className="absolute top-4 right-4 w-8 h-8 border-r-4 border-t-4 border-yellow-400 rounded-tr-xl opacity-60"></div>
+            <div className="absolute bottom-4 left-4 w-8 h-8 border-l-4 border-b-4 border-yellow-400 rounded-bl-xl opacity-60"></div>
+            <div className="absolute bottom-4 right-4 w-8 h-8 border-r-4 border-b-4 border-yellow-400 rounded-br-xl opacity-60"></div>
+            
+            {/* Central focus area with proper icon */}
+            <div className="relative z-10 p-8 bg-gradient-to-br from-yellow-400/20 to-yellow-500/30 rounded-full shadow-2xl border-2 border-yellow-400/50 backdrop-blur-sm">
+              <div className="text-yellow-300 text-6xl drop-shadow-2xl filter brightness-125">
+                <IconComponent size={56} className="drop-shadow-2xl" />
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
       
       {/* Card Front - Premium Red Theme with Prominent Number */}
