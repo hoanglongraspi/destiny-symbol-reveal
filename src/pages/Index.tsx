@@ -226,44 +226,210 @@ const FortuneCard = ({
   );
 };
 
+// Card Selection Component - Shows 5 cards spreading out for selection
+const CardSelectionSpread = ({ 
+  onSelectCard, 
+  onCancel, 
+  cardIndex, 
+  symbol, 
+  language 
+}: {
+  onSelectCard: (selectedIndex: number) => void;
+  onCancel: () => void;
+  cardIndex: number;
+  symbol: any;
+  language: 'en' | 'zh';
+}) => {
+  const [selectedCard, setSelectedCard] = useState<number | null>(null);
+  const [isAnimating, setIsAnimating] = useState(true);
+  const [imageErrors, setImageErrors] = useState([false, false, false, false, false]);
+
+  React.useEffect(() => {
+    // Animation delay for spread effect
+    const timer = setTimeout(() => setIsAnimating(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleCardClick = (index: number) => {
+    if (selectedCard !== null) return;
+    
+    setSelectedCard(index);
+    
+    // Wait for selection animation then call onSelectCard
+    setTimeout(() => {
+      onSelectCard(index);
+    }, 800);
+  };
+
+  const handleImageError = (index: number) => {
+    setImageErrors(prev => {
+      const newErrors = [...prev];
+      newErrors[index] = true;
+      return newErrors;
+    });
+  };
+
+  const spreadPositions = [
+    { transform: 'translateX(-170px) translateY(-30px) rotate(-15deg)', delay: '0ms' },
+    { transform: 'translateX(-85px) translateY(-50px) rotate(-8deg)', delay: '100ms' },
+    { transform: 'translateX(0px) translateY(-55px) rotate(0deg)', delay: '200ms' },
+    { transform: 'translateX(85px) translateY(-50px) rotate(8deg)', delay: '300ms' },
+    { transform: 'translateX(170px) translateY(-30px) rotate(15deg)', delay: '400ms' }
+  ];
+
+  const IconComponent = symbol.icon;
+
+  return (
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div className="flex flex-col items-center justify-center min-h-screen w-full px-4">
+        {/* Instruction text - Always above cards */}
+        <div className="text-center mb-12 z-20 relative">
+          <h3 className="text-3xl font-bold text-yellow-300 mb-4 drop-shadow-lg">
+            {language === 'en' ? 'Choose Your Card' : '选择你的牌'}
+          </h3>
+          <p className="text-yellow-200 mb-3 text-lg">
+            {language === 'en' ? 'Select one of the 5 cards to reveal your destiny' : '从5张牌中选择一张来揭示你的命运'}
+          </p>
+          <p className="text-yellow-300/90 text-base italic font-medium">
+            {language === 'en' ? '✨ Trust your intuition and let your heart guide you ✨' : '✨ 相信你的直觉，让心灵指引你 ✨'}
+          </p>
+        </div>
+
+        {/* Card spread container - Centered */}
+        <div className="relative flex justify-center items-center" style={{ minHeight: '320px', minWidth: '500px' }}>
+          {[0, 1, 2, 3, 4].map((index) => {
+            const position = spreadPositions[index];
+            const isSelected = selectedCard === index;
+            const hasImageError = imageErrors[index];
+            
+            return (
+              <div
+                key={index}
+                className={`absolute w-36 h-52 cursor-pointer transition-all duration-700 hover:scale-110 hover:z-20 ${
+                  isAnimating ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+                } ${isSelected ? 'scale-125 z-30' : ''}`}
+                style={{
+                  transform: isSelected ? 'translateX(-50%) translateY(-50%) scale(1.25)' : `translateX(-50%) translateY(-50%) ${position.transform}`,
+                  transitionDelay: isSelected ? '0ms' : position.delay,
+                  left: '50%',
+                  top: '50%',
+                  transformOrigin: 'center center'
+                }}
+                onClick={() => handleCardClick(index)}
+              >
+                {/* Card back - Same design as main cards */}
+                <div className="w-full h-full rounded-2xl border-2 border-yellow-400 shadow-2xl overflow-hidden relative">
+                  {!hasImageError ? (
+                    <div className="w-full h-full relative bg-gradient-to-br from-red-900 via-red-800 to-red-950 rounded-2xl">
+                      <img 
+                        src={`/pic/${cardIndex + 1}.png`} 
+                        alt="Card Back"
+                        className="w-full h-full object-cover rounded-2xl"
+                        style={{
+                          objectPosition: 'center center',
+                          filter: 'brightness(1.1) contrast(1.05)'
+                        }}
+                        onError={() => handleImageError(index)}
+                        onLoad={() => console.log(`Selection card ${index} back image loaded successfully`)}
+                      />
+                    </div>
+                  ) : (
+                    /* Fallback styled version - Same as main cards */
+                    <div className="w-full h-full bg-gradient-to-br from-red-800 via-red-700 to-red-900 rounded-2xl flex items-center justify-center relative overflow-hidden">
+                      {/* Elegant background pattern */}
+                      <div className="absolute inset-0 opacity-20">
+                        {/* Radial gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-radial from-yellow-400/20 via-transparent to-transparent"></div>
+                        
+                        {/* Subtle geometric pattern */}
+                        <div className="absolute top-1/4 left-1/4 w-16 h-16 border-2 border-yellow-400/30 rounded-full animate-pulse"></div>
+                        <div className="absolute bottom-1/4 right-1/4 w-12 h-12 border border-yellow-300/20 rounded-lg rotate-45"></div>
+                        
+                        {/* Flowing lines */}
+                        <div className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent"></div>
+                        <div className="absolute bottom-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent"></div>
+                      </div>
+                      
+                      {/* Minimalist corner accents */}
+                      <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-yellow-400 rounded-tl-lg opacity-60"></div>
+                      <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-yellow-400 rounded-tr-lg opacity-60"></div>
+                      <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-yellow-400 rounded-bl-lg opacity-60"></div>
+                      <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-yellow-400 rounded-br-lg opacity-60"></div>
+                      
+                      {/* Central focus area with proper icon */}
+                      <div className="relative z-10 p-3 bg-gradient-to-br from-yellow-400/20 to-yellow-500/30 rounded-full shadow-xl border border-yellow-400/50 backdrop-blur-sm">
+                        <div className="text-yellow-300 text-3xl drop-shadow-xl filter brightness-125">
+                          <IconComponent size={32} className="drop-shadow-xl" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Selection glow effect */}
+                  {isSelected && (
+                    <div className="absolute inset-0 bg-yellow-400/20 rounded-2xl animate-pulse"></div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Cancel button - Always below cards */}
+        <div className="text-center mt-16 z-20 relative">
+          <Button
+            onClick={onCancel}
+            variant="outline"
+            className="bg-black/50 text-yellow-300 border-yellow-400/50 hover:bg-yellow-400/20 px-6 py-3 text-lg font-medium"
+          >
+            {language === 'en' ? '← Go Back' : '← 返回'}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Index = () => {
   const [language, setLanguage] = useState<'en' | 'zh'>('en');
   const [revealedCards, setRevealedCards] = useState<boolean[]>([false, false, false, false, false]);
   const [drawnSymbols, setDrawnSymbols] = useState<any[]>([]);
   const [gameStarted, setGameStarted] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [showCardSelection, setShowCardSelection] = useState(false);
+  const [selectedMainCardIndex, setSelectedMainCardIndex] = useState<number | null>(null);
 
   const text = {
     en: {
-      title: "Chinese Fortune Cards",
-      subtitle: "Click on cards to reveal your mystical numbers",
+      title: "Feng Shui Fortune Cards",
+      subtitle: "Discover your destiny through ancient Chinese wisdom",
       start: "Start",
       setting: "Setting", 
       credit: "Credit",
       language: "Language",
-      instructions: "Click on a card to reveal your fortune number",
+      instructions: "Click on a card to reveal your feng shui fortune",
       newGame: "New Game",
-      results: "Your Complete Fortune Reading",
+      results: "Your Complete Feng Shui Reading",
       totalScore: "Total Fortune Score",
       dominantElement: "Dominant Element",
-      fortuneSummary: "Fortune Summary",
-      yourPath: "Your destined path combines the wisdom of ancient China. The elements guide your journey through life's seasons.",
+      fortuneSummary: "Feng Shui Fortune Summary",
+      yourPath: "Your destined path follows the ancient art of feng shui. The five elements harmonize your energy and guide your journey through life's cycles.",
       closeResults: "Close Results"
     },
     zh: {
-      title: "中华占卜卡",
-      subtitle: "点击卡片揭示你的神秘数字",
+      title: "风水占卜卡",
+      subtitle: "通过古代中华智慧发现你的命运",
       start: "开始",
       setting: "设置",
       credit: "信用",
       language: "语言",
-      instructions: "点击卡片揭示你的命运数字",
+      instructions: "点击卡片揭示你的风水运势",
       newGame: "新游戏",
-      results: "你的完整运势解读",
+      results: "你的完整风水解读",
       totalScore: "总运势分数",
       dominantElement: "主导元素",
-      fortuneSummary: "运势总结",
-      yourPath: "你的命运之路融合了古代中国的智慧。五行元素指引你走过人生的四季。",
+      fortuneSummary: "风水运势总结",
+      yourPath: "你的命运之路遵循古老的风水之道。五行元素调和你的能量，指引你走过人生的轮回。",
       closeResults: "关闭结果"
     }
   };
@@ -286,8 +452,17 @@ const Index = () => {
       return;
     }
     
+    // Show card selection spread instead of immediately revealing
+    setSelectedMainCardIndex(index);
+    setShowCardSelection(true);
+  };
+
+  // Handle card selection from the 5-card spread
+  const handleCardSelection = (selectedIndex: number) => {
+    if (selectedMainCardIndex === null) return;
+    
     // Get the symbol for this specific position
-    const cardSymbol = symbols[index];
+    const cardSymbol = symbols[selectedMainCardIndex];
     
     // Generate random number within the specific range for this card
     const [min, max] = cardSymbol.numberRange;
@@ -301,15 +476,19 @@ const Index = () => {
     
     setRevealedCards(prev => {
       const newRevealed = [...prev];
-      newRevealed[index] = true;
+      newRevealed[selectedMainCardIndex] = true;
       return newRevealed;
     });
     
     setDrawnSymbols(prev => {
       const newSymbols = [...prev];
-      newSymbols[index] = symbolWithNumber;
+      newSymbols[selectedMainCardIndex] = symbolWithNumber;
       return newSymbols;
     });
+
+    // Close card selection
+    setShowCardSelection(false);
+    setSelectedMainCardIndex(null);
 
     // Show detailed fortune message
     setTimeout(() => {
@@ -319,6 +498,28 @@ const Index = () => {
         duration: 6000,
       });
     }, 600);
+  };
+
+  // Show breathing notification when card selection opens
+  React.useEffect(() => {
+    if (showCardSelection) {
+      // Show breathing notification
+      setTimeout(() => {
+        toast({
+          title: language === 'en' ? "🫁 Take a Deep Breath" : "🫁 深呼吸",
+          description: language === 'en' 
+            ? "Close your eyes, breathe deeply, and let your intuition guide you to the right card. Trust your inner wisdom." 
+            : "闭上眼睛，深呼吸，让你的直觉引导你选择正确的牌。相信你内心的智慧。",
+          duration: 5000,
+        });
+      }, 800); // Show after cards have spread out
+    }
+  }, [showCardSelection, language]);
+
+  // Handle canceling card selection
+  const handleCancelSelection = () => {
+    setShowCardSelection(false);
+    setSelectedMainCardIndex(null);
   };
 
   // Check for results display when all cards are revealed
@@ -348,10 +549,10 @@ const Index = () => {
 
   const showCredits = () => {
     toast({
-      title: language === 'en' ? "Chinese Fortune Cards" : "中华占卜卡",
+      title: language === 'en' ? "Feng Shui Fortune Cards" : "风水占卜卡",
       description: language === 'en' 
-        ? "An educational app exploring Chinese cultural traditions through interactive fortune-telling with five elements and directions."
-        : "通过互动占卜探索中国文化传统的教育应用程序，融合五行和方位学说。",
+        ? "An educational app exploring the ancient Chinese art of feng shui through interactive fortune-telling with five elements and directional harmony."
+        : "通过互动占卜探索古代中国风水学的教育应用程序，融合五行和方位调和之道。",
       duration: 5000,
     });
   };
@@ -553,6 +754,17 @@ const Index = () => {
           {text[language].credit}
         </Button>
       </div>
+
+      {/* Card Selection Spread Modal */}
+      {showCardSelection && selectedMainCardIndex !== null && (
+        <CardSelectionSpread
+          onSelectCard={handleCardSelection}
+          onCancel={handleCancelSelection}
+          cardIndex={selectedMainCardIndex}
+          symbol={symbols[selectedMainCardIndex]}
+          language={language}
+        />
+      )}
     </div>
   );
 };
